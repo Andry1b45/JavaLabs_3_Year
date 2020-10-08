@@ -1,0 +1,3 @@
+This is sample
+test file to show how program is working.
+Search for "search" word.
