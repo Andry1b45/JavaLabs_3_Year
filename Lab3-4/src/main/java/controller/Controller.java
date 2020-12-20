@@ -28,7 +28,7 @@ public class Controller {
                 return;
             }
             try {
-                action = ActionFactory.getActionByNumber(actionId.toUpperCase());
+                action = ActionFactory.getActionByName(actionId.toUpperCase());
                 action.execute(view);
             } catch (UnsupportedActionException e) {
                 view.error(e.getMessage());

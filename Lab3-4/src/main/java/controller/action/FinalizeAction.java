@@ -4,6 +4,10 @@ import dto.AppliedStudentDto;
 import dto.FacultyDto;
 import entity.Application;
 import entity.Faculty;
+import exception.AddingStudentsException;
+import exception.GetApplicationsException;
+import exception.GetFacultiesException;
+import exception.RemoveApplicationsException;
 import service.AdminService;
 import view.View;
 
@@ -29,14 +33,14 @@ public class FinalizeAction implements Action{
             faculties= adminService.getApplications();
             view.printList(faculties);
         }
-        catch (SQLException e){
+        catch (GetApplicationsException e){
             view.error("Finalization error(SQL exception)");
         }
         ArrayList<Faculty> facultiesData = null;
         try {
             facultiesData = adminService.getFaculties();
         }
-        catch (SQLException e){
+        catch (GetFacultiesException e){
             view.error(e.getMessage());
         }
         view.print("\nName Budget All");
@@ -51,7 +55,7 @@ public class FinalizeAction implements Action{
         try {
             facultyApplications = adminService.getFacultyApplications(new FacultyDto(facultyName));
         }
-        catch (SQLException e){
+        catch (GetApplicationsException e){
             view.error(e.getMessage());
         }
         for (Application apl : facultyApplications) {
@@ -71,7 +75,7 @@ public class FinalizeAction implements Action{
                                 adminService.AddAppliedStudent(appliedStudentDto);
                                 adminService.RemoveAllStudentApplications(appliedStudentDto);
                             }
-                            catch (SQLException e){
+                            catch (RemoveApplicationsException | AddingStudentsException e){
                                 view.error(e.getMessage());
                             }
                         }
@@ -86,7 +90,7 @@ public class FinalizeAction implements Action{
                                 adminService.AddAppliedStudent(appliedStudentDto);
                                 adminService.RemoveAllStudentApplications(appliedStudentDto);
                             }
-                            catch (SQLException e){
+                            catch (AddingStudentsException | RemoveApplicationsException e){
                                 view.error(e.getMessage());
                             }
                         }

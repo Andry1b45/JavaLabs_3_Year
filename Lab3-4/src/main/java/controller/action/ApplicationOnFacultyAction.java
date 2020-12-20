@@ -2,10 +2,11 @@ package controller.action;
 
 import controller.UserAuthData;
 import dto.ApplicationDto;
+import exception.ApplicationException;
+import exception.GetFacultiesException;
 import service.UserService;
 import view.View;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 
 
@@ -28,7 +29,7 @@ public class ApplicationOnFacultyAction implements Action{
             faculties= userService.getFaculties(sort);
             view.printList(faculties);
         }
-        catch (SQLException e){
+        catch (GetFacultiesException e){
             view.error(e.getMessage());
         }
 
@@ -48,7 +49,7 @@ public class ApplicationOnFacultyAction implements Action{
         try {
             result = userService.sendApplication(new ApplicationDto(faculty, user.getId(), math, ukrainian, english,history));
         }
-        catch (SQLException e){
+        catch (ApplicationException e){
             view.error(e.getMessage());
         }
         view.print(result);

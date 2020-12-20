@@ -1,6 +1,9 @@
 package controller.action;
 
 import dto.FacultyDto;
+import exception.DeleteFacultyException;
+import exception.EditFacultiesException;
+import exception.GetFacultiesException;
 import service.AdminService;
 import service.UserService;
 import view.View;
@@ -27,7 +30,7 @@ public class EditFacultiesAction implements Action {
             faculties= userService.getFaculties(1);
             view.printList(faculties);
         }
-        catch (SQLException e){
+        catch (GetFacultiesException e){
             view.error(e.getMessage());
         }
 
@@ -55,7 +58,7 @@ public class EditFacultiesAction implements Action {
                 try {
                     result = adminService.editFaculties(new FacultyDto(facultyName, budgetPlacesAmmount, placesAmmount));
                 }
-                catch (SQLException e){
+                catch (EditFacultiesException e){
                     view.error(e.getMessage());
                 }
                 view.print(result);
@@ -80,7 +83,7 @@ public class EditFacultiesAction implements Action {
                     try {
                         result = adminService.editFaculties(new FacultyDto(facultyName, budgetPlacesAmmount, placesAmmount));
                     }
-                    catch (SQLException e){
+                    catch (EditFacultiesException e){
                         view.error(e.getMessage());
                     }
                     view.print(result);
@@ -100,7 +103,7 @@ public class EditFacultiesAction implements Action {
                     try {
                         result = adminService.deleteFaculty(new FacultyDto(facultyName));
                     }
-                    catch (SQLException e){
+                    catch (DeleteFacultyException e){
                         view.error(e.getMessage());
                     }
                     view.print(result);

@@ -33,7 +33,6 @@ public class UserService {
                 UserAuthData.setAuthData(userData.getId(), userData.getUsername(), userData.getRole());
                 return "Login success!";
             }
-            throw new BadCredentialsException();
         }
         throw new BadCredentialsException();
     }
@@ -63,17 +62,28 @@ public class UserService {
         return "Register success!";
     }
 
-    public ArrayList<String> getFaculties(int sort) throws SQLException{
-        facultyDao.setConnection(ConnectionsPool.getPool().getConnection());
-        ArrayList<String> faculties = facultyDao.getFaculties(sort);
-        ConnectionsPool.getPool().releaseConnection(facultyDao.releaseConnection());
+    public ArrayList<String> getFaculties(int sort) throws GetFacultiesException {
+        ArrayList<String> faculties;
+        try {
+            facultyDao.setConnection(ConnectionsPool.getPool().getConnection());
+            faculties = facultyDao.getFaculties(sort);
+            ConnectionsPool.getPool().releaseConnection(facultyDao.releaseConnection());
+        }
+        catch (SQLException e){
+            throw new GetFacultiesException();
+        }
         return faculties;
     }
 
-    public String sendApplication(ApplicationDto applicationData) throws SQLException{
+    public String sendApplication(ApplicationDto applicationData) throws ApplicationException {
+        try{
         applicationDao.setConnection(ConnectionsPool.getPool().getConnection());
-        applicationDao.saveApplication(Application.fromApplicationData(applicationData));
+        applicationDao.saveApplication(Application.fromApplicationData(applicationData)); //todo сделать нормальные названия
         ConnectionsPool.getPool().releaseConnection(userDao.releaseConnection());
+        }
+        catch (SQLException e){
+            throw new ApplicationException();
+        }
         String result = "Succesfully sended application";
         return  result;
     }

@@ -4,7 +4,7 @@ import controller.useractions.ActionType;
 import exception.UnsupportedActionException;
 
 public class ActionFactory {
-    public static Action getActionByNumber(String action) throws UnsupportedActionException {
+    public static Action getActionByName(String action) throws UnsupportedActionException {
         ActionType actionType;
         try {
             actionType = ActionType.valueOf(action);

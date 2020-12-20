@@ -1,11 +1,14 @@
 package controller.action;
 
 import dto.ApplicationDto;
+import exception.ApplicationException;
+import exception.ChangeStatementException;
+import exception.GetFacultiesException;
+import exception.GetStudentsException;
 import service.AdminService;
 import service.UserService;
 import view.View;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.UUID;
 
@@ -32,17 +35,14 @@ public class EditStudentsAction implements Action {
                     students = adminService.getStudents();
                     view.printList(students);
                 }
-                catch (SQLException e){
-                    view.error(e.getMessage());
-                }
-                catch (NullPointerException e){
+                catch (GetStudentsException e){
                     view.error(e.getMessage());
                 }
                 UUID studentID = UUID.fromString(view.getAnswer("Input student ID:"));
                 Boolean parameter = Boolean.parseBoolean(view.getAnswer("Block or unblock student?(true/false)"));
                 try {
                     result = adminService.changeStudentStatement(studentID, parameter);
-                } catch (SQLException e) {
+                } catch (ChangeStatementException e) {
                    view.error(e.getMessage());
                 }
                 view.print(result);
@@ -56,10 +56,7 @@ public class EditStudentsAction implements Action {
                     students = adminService.getStudents();
                     view.printList(students);
                 }
-                catch (SQLException e){
-                    view.error(e.getMessage());
-                }
-                catch (NullPointerException e){
+                catch (NullPointerException | GetStudentsException e){
                     view.error(e.getMessage());
                 }
                 UUID studentID = UUID.fromString(view.getAnswer("Input student ID:"));
@@ -69,7 +66,7 @@ public class EditStudentsAction implements Action {
                     faculties= userService.getFaculties(1);
                     view.printList(faculties);
                 }
-                catch (SQLException e){
+                catch (GetFacultiesException e){
                     view.error(e.getMessage());
                 }
                 int faculty = 0;
@@ -87,7 +84,7 @@ public class EditStudentsAction implements Action {
                     result = userService.sendApplication(new ApplicationDto(faculty, studentID, math, ukrainian,
                             english,history));
                 }
-                catch (SQLException e){
+                catch (ApplicationException e){
                     view.error(e.getMessage());
                 }
                 view.print(result);
@@ -101,10 +98,7 @@ public class EditStudentsAction implements Action {
                     students = adminService.getStudents();
                     view.printList(students);
                 }
-                catch (SQLException e){
-                    view.error(e.getMessage());
-                }
-                catch (NullPointerException e){
+                catch (GetStudentsException e){
                     view.error(e.getMessage());
                 }
                 break;
