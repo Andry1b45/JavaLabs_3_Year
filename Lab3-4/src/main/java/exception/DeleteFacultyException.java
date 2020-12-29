@@ -1,6 +1,6 @@
 package exception;
 
-public class DeleteFacultyException extends Exception{
+public class DeleteFacultyException extends RuntimeException{
     public DeleteFacultyException() {
         super("Error deleting faculty!");
     }

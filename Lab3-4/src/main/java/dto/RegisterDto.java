@@ -68,6 +68,10 @@ public class RegisterDto {
         return role;
     }
 
+    public int getConvertedRole() {
+        return Integer.parseInt(role);
+    }
+
     public String getCity() {
         return city;
     }

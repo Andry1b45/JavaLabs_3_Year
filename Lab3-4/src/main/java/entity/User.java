@@ -50,6 +50,19 @@ public class User {
         this.exams_id = exams_id;
     }
 
+    public User(UUID id, String username, String full_name, String email, boolean blocked, int role){
+        this.id = id;
+        this.username = username;
+        this.full_name = full_name;
+        this.email = email;
+        this.blocked = blocked;
+        this.role = String.valueOf(role);
+    }
+
+    public User(Boolean blocked){
+        this.blocked = blocked;
+    }
+
 
     public static User fromRegisterData(RegisterDto data) {
         return new User(
@@ -84,12 +97,17 @@ public class User {
         return result;
     }
 
-    public int getConvertedRole(){
-        int result = 0;
-        if(role.equals("student"))
-            result = 1;
-        else if(role.equals("admin"))
-            result = 2;
+    public String getConvertedBlocked(){
+        if(blocked.equals(true)) return "Blocked";
+        else return "Not blocked";
+    }
+
+    public String getConvertedRole(){
+        String result = "";
+        if(role.equals(1) | role.equals(("1")))
+            result = "Student";
+        else if(role.equals(2) | role.equals("2"))
+            result = "Admin";
         return result;
     }
 

@@ -37,21 +37,6 @@ public class UserService {
         throw new BadCredentialsException();
     }
 
-    public Optional<User> loginWithDto(LoginDto credentials) throws Exception {
-        userDao.setConnection(ConnectionsPool.getPool().getConnection());
-        Optional<User> user = userDao.findByUsername(credentials.getUsername());
-        ConnectionsPool.getPool().releaseConnection(userDao.releaseConnection());
-        if (user.isPresent()) {
-            User userData = user.get();
-            if (userData.getPassword().equals(credentials.getPassword())) {
-                UserAuthData.setAuthData(userData.getId(), userData.getUsername(), userData.getRole());
-            }
-            throw new BadCredentialsException();
-        }
-        return user;
-    }
-
-
     public String register(RegisterDto registerData) throws SQLException, UnavailableException {
         userDao.setConnection(ConnectionsPool.getPool().getConnection());
         if (userDao.findByUsername(registerData.getUsername()).isPresent()) {

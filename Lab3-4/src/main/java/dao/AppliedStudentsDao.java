@@ -11,13 +11,13 @@ import java.sql.SQLException;
 public class AppliedStudentsDao extends GeneralDao{
     public String addNewStudent(AppliedStudentDto appliedStudentDto) {
         Connection connection = getConnection();
-        String findAllApplications = "insert into appliedStudents (student_id, faculty_id, budget) values (?, ?, ?)";
+        String findAllApplications = "insert into appliedstudents (student_id, faculty_id, budget) values (?, ?, ?)";
         try {
             PreparedStatement pstmt = connection.prepareStatement(findAllApplications);
             pstmt.setObject(1, appliedStudentDto.getStudentID(), java.sql.Types.OTHER);
-            pstmt.setObject(2, appliedStudentDto.getFacultyID(), java.sql.Types.OTHER);
-            pstmt.setObject(3, appliedStudentDto.getBudget());
-            ResultSet res = pstmt.executeQuery();
+            pstmt.setInt(2, appliedStudentDto.getFacultyID());
+            pstmt.setInt(3, appliedStudentDto.getBudget());
+            pstmt.execute();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }

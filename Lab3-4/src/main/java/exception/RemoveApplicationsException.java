@@ -1,6 +1,6 @@
 package exception;
 
-public class RemoveApplicationsException extends Exception{
+public class RemoveApplicationsException extends RuntimeException{
     public RemoveApplicationsException() {
         super("Error removing applications!");
     }

@@ -30,14 +30,6 @@ public class UserDao extends GeneralDao {
                         res.getInt("attestat_id"),
                         res.getInt("exams_id")
                 );
-                if (user != null)
-                    try {
-                        Validator.validateBlocked(user);
-                    }
-                    catch (BlockedUserException e){
-                        e.printStackTrace();
-                        System.exit(1);
-                    }
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -74,7 +66,7 @@ public class UserDao extends GeneralDao {
             preparedStatement.setString(4, user.getEmail());
             preparedStatement.setString(5, user.getPassword());
             preparedStatement.setBoolean(6, false);
-            preparedStatement.setInt(7, user.getConvertedRole());
+            preparedStatement.setInt(7, Integer.parseInt(user.getRole()));
             preparedStatement.setString(8, user.getCity());
             preparedStatement.setString(9, user.getRegion());
             preparedStatement.setString(10, user.getSchool());

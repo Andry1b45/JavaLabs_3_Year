@@ -44,9 +44,18 @@ public class FacultyDao extends GeneralDao{
         return facultiesArray;
     }
 
-    public ArrayList<Faculty> getFacultiesList(){
+    public ArrayList<Faculty> getFacultiesList(int sort){
         Connection connection = getConnection();
-        String getFaculties = "select * from faculties";
+        String getFaculties = null;
+        switch (sort){
+            case 1: getFaculties = "select * from faculties"; break;
+            case 2: getFaculties = "select * from faculties order by name"; break;
+            case 3: getFaculties = "select * from faculties order by name desc"; break;
+            case 4: getFaculties = "select * from faculties order by budgetplacesammount asc"; break;
+            case 5: getFaculties = "select * from faculties order by budgetplacesammount desc"; break;
+            case 6: getFaculties = "select * from faculties order by placesammount asc"; break;
+            case 7: getFaculties = "select * from faculties order by placesammount desc"; break;
+        }
         ArrayList<Faculty> facultiesArray = new ArrayList<>();
         try{
             PreparedStatement pstmt = connection.prepareStatement(getFaculties);
@@ -105,6 +114,26 @@ public class FacultyDao extends GeneralDao{
         catch (NullPointerException e){
             e.printStackTrace();
         }
+    }
+
+    public int getFacultyByName(String facultyName){
+        Connection connection = getConnection();
+        String getFacultyID = "select id from faculties where name = ?";
+        int facultyID = 0;
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(getFacultyID);
+            preparedStatement.setString(1, facultyName);
+            ResultSet res = preparedStatement.executeQuery();
+            while (res.next()) {
+                facultyID = res.getInt("id");
+            }
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+        catch (NullPointerException e){
+            e.printStackTrace();
+        }
+        return facultyID;
     }
 
     public void decrementPlace(AppliedStudentDto appliedStudentDto){

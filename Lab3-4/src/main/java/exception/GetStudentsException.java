@@ -1,6 +1,6 @@
 package exception;
 
-public class GetStudentsException extends Exception{
+public class GetStudentsException extends RuntimeException{
     public GetStudentsException() {
         super("Error getting applications!");
     }

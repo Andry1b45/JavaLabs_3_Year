@@ -1,6 +1,7 @@
 package dto;
 
 public class FacultyDto {
+    private int id;
     private String name;
     private int budgetPlacesAmount;
     private int placesAmount;

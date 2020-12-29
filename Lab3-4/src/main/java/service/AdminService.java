@@ -22,7 +22,7 @@ public class AdminService {
     private final StudentsDao studentsDao;
     private final AppliedStudentsDao appliedStudentsDao;
 
-    private AdminService(){
+    public AdminService(){
         applicationDao = new ApplicationDao();
         facultyDao = new FacultyDao();
         studentsDao = new StudentsDao();
@@ -71,7 +71,7 @@ public class AdminService {
         ArrayList <Faculty> result;
         try{
         facultyDao.setConnection(ConnectionsPool.getPool().getConnection());
-        result = facultyDao.getFacultiesList();
+        result = facultyDao.getFacultiesList(1);
         }
         catch (SQLException e){
             throw new GetFacultiesException();

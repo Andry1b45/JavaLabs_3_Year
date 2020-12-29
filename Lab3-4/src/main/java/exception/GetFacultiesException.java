@@ -1,6 +1,6 @@
 package exception;
 
-public class GetFacultiesException extends Exception{
+public class GetFacultiesException extends RuntimeException{
     public GetFacultiesException() {
         super("Error getting faculties!");
     }

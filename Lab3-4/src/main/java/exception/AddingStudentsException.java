@@ -1,6 +1,6 @@
 package exception;
 
-public class AddingStudentsException extends Exception{
+public class AddingStudentsException extends RuntimeException{
     public AddingStudentsException() {
         super("Error adding applied students!");
     }

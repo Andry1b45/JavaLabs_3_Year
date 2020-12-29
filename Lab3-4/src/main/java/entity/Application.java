@@ -5,6 +5,8 @@ import dto.ApplicationDto;
 import java.util.UUID;
 
 public class Application {
+    private String studentUsername;
+    private String facultyName;
     private int facultyID;
     private UUID studentID;
     private int mathGrade;
@@ -32,11 +34,28 @@ public class Application {
         );
     }
 
+    public Application(String facultyName, String studentUsername, String mathGrade, String ukrainianGrade, String englishGrade, String historyGrade) {
+        this.facultyName = facultyName;
+        this.studentUsername = studentUsername;
+        this.mathGrade = Integer.parseInt(mathGrade);
+        this.ukrainianGrade = Integer.parseInt(ukrainianGrade);
+        this.englishGrade = Integer.parseInt(englishGrade);
+        this.historyGrade = Integer.parseInt(historyGrade);
+    }
+
     @Override
     public String toString() {
         return "facultyID: " + facultyID + ", studentID: " + studentID + ", mathGrade: " + mathGrade +
                 ", ukrainianGrade: " + ukrainianGrade + ", englishGrade: " + englishGrade +
                 ", historyGrade: " + historyGrade;
+    }
+
+    public String getStudentUsername() {
+        return studentUsername;
+    }
+
+    public String getFacultyName() {
+        return facultyName;
     }
 
     public int getFacultyID() {

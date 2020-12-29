@@ -1,6 +1,6 @@
 package exception;
 
-public class GetApplicationsException extends Exception{
+public class GetApplicationsException extends RuntimeException{
     public GetApplicationsException() {
         super("Error getting applications!");
     }

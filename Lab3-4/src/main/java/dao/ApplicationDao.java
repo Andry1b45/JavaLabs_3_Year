@@ -3,6 +3,7 @@ package dao;
 import dto.AppliedStudentDto;
 import dto.FacultyDto;
 import entity.Application;
+import entity.Faculty;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -31,20 +32,84 @@ public class ApplicationDao extends GeneralDao{
         return applicationsArray;
     }
 
-    public ArrayList<Application> getApplicationList(FacultyDto facultyDto) throws SQLException {
+    public ArrayList<Application> getApplicationList(FacultyDto facultyDto){
         Connection connection = getConnection();
         final String findApplicationsByFaculty = "select * from facultyrequests where facultyid = (select id from faculties " +
                 "where name = ?) order by (math + ukrainian + english + history) desc";
         ArrayList<Application> applicationsArray = new ArrayList<>();
-        PreparedStatement pstmt = connection.prepareStatement(findApplicationsByFaculty);
-        pstmt.setString(1, facultyDto.getName());
-        ResultSet res = pstmt.executeQuery();
-        while (res.next()) {
-            applicationsArray.add(new Application(res.getInt("facultyid"),
-                    UUID.fromString(res.getString("studentid")),res.getInt("math"),res.getInt("ukrainian"),
-                    res.getInt("english"),res.getInt("history")));
+        try{
+            PreparedStatement pstmt = connection.prepareStatement(findApplicationsByFaculty);
+            pstmt.setString(1, facultyDto.getName());
+            ResultSet res = pstmt.executeQuery();
+            while (res.next()) {
+                applicationsArray.add(new Application(res.getInt("facultyid"),
+                        UUID.fromString(res.getString("studentid")),res.getInt("math"),res.getInt("ukrainian"),
+                        res.getInt("english"),res.getInt("history")));
+            }
+        }
+        catch (SQLException e){
+            e.printStackTrace();
         }
         return applicationsArray;
+    }
+
+    public ArrayList<Application> getApplicationsList(){
+        Connection connection = getConnection();
+        final String findApplicationsByFaculty = "select * from facultyrequests order by (math + ukrainian + english + history) desc";
+        ArrayList<Application> applicationsArray = new ArrayList<>();
+        try{
+            PreparedStatement pstmt = connection.prepareStatement(findApplicationsByFaculty);
+            ResultSet res = pstmt.executeQuery();
+            while (res.next()) {
+                applicationsArray.add(new Application(res.getInt("facultyid"),
+                        UUID.fromString(res.getString("studentid")),res.getInt("math"),res.getInt("ukrainian"),
+                        res.getInt("english"),res.getInt("history")));
+            }
+        }
+        catch (SQLException e){
+            e.printStackTrace();
+        }
+
+        ArrayList<Application> result = new ArrayList<>();
+
+       for(Application application: applicationsArray){
+           int facultyId = application.getFacultyID();
+           UUID studentId= application.getStudentID();
+
+           final String findFacultyName = "select name from faculties where id=?";
+           final String findStudentUsernameByID = "select username from users where id=?";
+
+           String facultyName = null;
+           String studentUsername = null;
+
+           try{
+               PreparedStatement pstmt = connection.prepareStatement(findFacultyName);
+               pstmt.setInt(1, facultyId);
+               ResultSet resultSet = pstmt.executeQuery();
+               while(resultSet.next()){
+                   facultyName = resultSet.getString("name");
+               }
+           }
+           catch (SQLException throwables) {
+               throwables.printStackTrace();
+           }
+
+           try {
+               PreparedStatement pstmt = connection.prepareStatement(findStudentUsernameByID);
+               pstmt.setObject(1, studentId, java.sql.Types.OTHER);
+               ResultSet resultSet = pstmt.executeQuery();
+               while(resultSet.next()){
+                   studentUsername = resultSet.getString("username");
+               }
+           } catch (SQLException throwables) {
+               throwables.printStackTrace();
+           }
+
+           result.add(new Application(facultyName, studentUsername, String.valueOf(application.getMathGrade()),
+                   String.valueOf(application.getUkrainianGrade()),
+                   String.valueOf(application.getEnglishGrade()), String.valueOf(application.getHistoryGrade())));
+       }
+       return result;
     }
 
     public void saveApplication(Application application){
