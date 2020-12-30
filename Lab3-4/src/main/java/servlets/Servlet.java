@@ -1,6 +1,7 @@
 package servlets;
 
 import entity.User;
+import org.apache.log4j.Logger;
 import service.AdminService;
 import service.UserService;
 import service.WebAdminService;
@@ -25,6 +26,7 @@ import java.util.Map;
 })
 public class Servlet extends HttpServlet {
     private Map<String, Action> actions;
+    final static Logger logger = Logger.getLogger(Servlet.class);
 
     @Override
     public void init(ServletConfig config) throws ServletException {
@@ -52,9 +54,11 @@ public class Servlet extends HttpServlet {
         String path = req.getServletPath();
         Action action = actions.get(path);
         if (action != null) {
+            logger.info("User " + req.getSession().getAttribute("username") + " choosen " + action.toString());
             action.execute(req, resp, req.getServletContext());
         } else {
-
+            logger.error("User " + req.getSession().getAttribute("username") + " choosen wrong option");
+            req.getRequestDispatcher("/jsp/errorPage.jsp").forward(req, resp);
         }
     }
 }

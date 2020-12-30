@@ -2,6 +2,7 @@ package servlets.Actions;
 
 import dto.ApplicationDto;
 import exception.BadEmailException;
+import org.apache.log4j.Logger;
 import service.WebAdminService;
 import service.WebUserService;
 import utilities.Validator;
@@ -24,6 +25,8 @@ public class AddStudentResults implements Action {
     private String history;
     private HttpSession session;
 
+    final static Logger logger = Logger.getLogger(AddStudentResults.class);
+
     public AddStudentResults(WebAdminService webAdminService, WebUserService webUserService) {
         this.webAdminService = webAdminService;
         this.webUserService = webUserService;
@@ -43,10 +46,12 @@ public class AddStudentResults implements Action {
         catch (BadEmailException exc){
             session = request.getSession(true);
             request.setAttribute("error", exc.getMessage());
+            logger.error("Error while adding student results");
             request.getRequestDispatcher("/jsp/addResults.jsp").forward(request, response);
         }
 
         webAdminService.addStudentResults(new ApplicationDto(faculty, email, math, ukrainian, english, history));
+        logger.info("Student results added successfully!");
         request.getRequestDispatcher("/jsp/adminMenu.jsp").forward(request, response);
     }
 }

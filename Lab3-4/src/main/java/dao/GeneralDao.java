@@ -3,13 +3,13 @@ package dao;
 import java.sql.Connection;
 
 public class GeneralDao {
-    private Connection connection;      //todo protected
+    protected Connection connection;
 
     public void setConnection(Connection connection) {
         this.connection = connection;
     }
 
-    public Connection releaseConnection() { //todo closeconnection
+    public Connection closeConnection() {
         Connection connection = this.connection;
         this.connection = null;
         return connection;

@@ -13,6 +13,7 @@ import java.util.ArrayList;
 
 public class ViewApplications implements Action {
     WebAdminService webAdminService;
+
     public ViewApplications(WebAdminService webAdminService) {
         this.webAdminService = webAdminService;
     }
@@ -22,6 +23,5 @@ public class ViewApplications implements Action {
             ArrayList<Application> applications = webAdminService.getApplications();
             PaginationService.pagination(request,applications,"applications",10);
             request.getRequestDispatcher("/jsp/viewApplications.jsp").forward(request, response);
-
     }
 }

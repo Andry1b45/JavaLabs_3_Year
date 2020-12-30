@@ -38,11 +38,21 @@ public class WebUserServiceTest {
 
     @Test(expected = BadCredentialsException.class)
     public void whenLoginBadCredentials() throws SQLException {
-        LoginDto loginDto = new LoginDto("false", "false");
+        LoginDto loginDto = new LoginDto("bersh", "false");
         when(userDao.findByUsername(loginDto.getUsername())).thenReturn(Optional.empty());
-        webUserService = new WebUserService();
-        assertNull(webUserService.login(loginDto));
+        assertNull(new WebUserService().login(loginDto));
         verify(userDao).findByUsername(loginDto.getUsername());
+    }
+
+
+    @Test
+    public void testLogin() throws SQLException {
+        LoginDto loginDto = new LoginDto("test", "pass");
+        User user = new User(UUID.fromString("433d669c-c5d1-4cf5-bde7-d4d80688472a"), "test", "andrew", "andrew@gmail.com", false, "ADMIN");
+        when(userDao.findByUsername(loginDto.getUsername())).thenReturn(Optional.of(user));
+        User secondUser = new WebUserService().login(loginDto);
+        assertNotNull(user);
+        assertEquals(user, secondUser);
     }
 
 

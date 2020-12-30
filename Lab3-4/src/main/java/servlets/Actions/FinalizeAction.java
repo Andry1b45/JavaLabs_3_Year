@@ -5,6 +5,7 @@ import dto.FacultyDto;
 import entity.Application;
 import entity.Faculty;
 import exception.*;
+import org.apache.log4j.Logger;
 import service.AdminService;
 import service.WebAdminService;
 
@@ -18,6 +19,7 @@ import java.util.ArrayList;
 public class FinalizeAction implements Action {
     private WebAdminService webAdminService;
     private AdminService adminService;
+    final static Logger logger = Logger.getLogger(FinalizeAction.class);
 
     public FinalizeAction(WebAdminService webAdminService, AdminService adminService) {
         this.webAdminService = webAdminService;
@@ -29,19 +31,19 @@ public class FinalizeAction implements Action {
             throws IOException, ServletException {
 
         String facultyName = request.getParameter("facultyName");
-        ArrayList<String> faculties = null;
+        ArrayList<String> studentApplications = null;
         try {
-            faculties= adminService.getApplications();
+            studentApplications = adminService.getApplications();
         }
         catch (GetApplicationsException e){
-            e.printStackTrace();
+            logger.error("Error while getting applications");
         }
         ArrayList<Faculty> facultiesData = null;
         try {
             facultiesData = adminService.getFaculties();
         }
         catch (GetFacultiesException e){
-            e.printStackTrace();
+            logger.error("Error while getting faculties");
         }
 
         ArrayList<Application> facultyApplications = null;
@@ -49,12 +51,11 @@ public class FinalizeAction implements Action {
             facultyApplications = adminService.getFacultyApplications(new FacultyDto(facultyName));
         }
         catch (GetApplicationsException e){
-            e.printStackTrace();
+            logger.error("Error while getting applications");
         }
 
 
-        for (int i = 0; i < faculties.size()*2-1; i++) {
-            System.out.println("iteration " + i + ":" + facultiesData.get(i).getName() + " " + facultyName);
+        for (int i = 0; i < studentApplications.size(); i++) {
             if ((facultiesData.get(i).getName()).equals(facultyName)){
                 if(facultiesData.get(i).getPlacesAmount() > 0){
                     if(facultiesData.get(i).getBudgetPlacesAmount() > 0){
@@ -65,7 +66,9 @@ public class FinalizeAction implements Action {
                                     1);
                             try {
                                 adminService.AddAppliedStudent(appliedStudentDto);
+                                logger.info("Applied students added to database");
                                 adminService.RemoveAllStudentApplications(appliedStudentDto);
+                                logger.info("Applied students deleted from applications");
                             }
                             catch (RemoveApplicationsException | AddingStudentsException e){
                                 request.setAttribute("error", e.getMessage());
@@ -81,9 +84,12 @@ public class FinalizeAction implements Action {
                                     2);
                             try{
                                 adminService.AddAppliedStudent(appliedStudentDto);
+                                logger.info("Applied students added to database");
                                 adminService.RemoveAllStudentApplications(appliedStudentDto);
+                                logger.info("Applied students deleted from applications");
                             }
                             catch (AddingStudentsException | RemoveApplicationsException e){
+                                logger.error("Error while finalizing faculty");
                                 request.setAttribute("error", e.getMessage());
                                 request.getRequestDispatcher("/jsp/finalize.jsp").forward(request, response);
                             }

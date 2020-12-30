@@ -13,7 +13,6 @@ import utilities.ConnectionsPool;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.UUID;
 
 public class WebAdminService {
     private final UserDao userDao;
@@ -33,7 +32,7 @@ public class WebAdminService {
         try{
             facultyDao.setConnection(ConnectionsPool.getPool().getConnection());
             facultyDao.addFaculty(facultyDto);
-            ConnectionsPool.getPool().releaseConnection(facultyDao.releaseConnection());
+            ConnectionsPool.getPool().releaseConnection(facultyDao.closeConnection());
             System.out.println("edited faculty");
         }
         catch (SQLException e){
@@ -45,7 +44,7 @@ public class WebAdminService {
         try {
             facultyDao.setConnection(ConnectionsPool.getPool().getConnection());
             facultyDao.deleteFaculty(facultyDto);
-            ConnectionsPool.getPool().releaseConnection(facultyDao.releaseConnection());
+            ConnectionsPool.getPool().releaseConnection(facultyDao.closeConnection());
         }
         catch (SQLException e){
             throw new DeleteFacultyException();
@@ -57,7 +56,7 @@ public class WebAdminService {
         try{
             studentsDao.setConnection(ConnectionsPool.getPool().getConnection());
             students = studentsDao.getStudentsList();
-            ConnectionsPool.getPool().releaseConnection(studentsDao.releaseConnection());}
+            ConnectionsPool.getPool().releaseConnection(studentsDao.closeConnection());}
         catch (NullPointerException | SQLException e){
             throw new GetStudentsException();
         }
@@ -69,7 +68,7 @@ public class WebAdminService {
         try{
             studentsDao.setConnection(ConnectionsPool.getPool().getConnection());
             studentsDao.block(email, statement);
-            ConnectionsPool.getPool().releaseConnection(studentsDao.releaseConnection());
+            ConnectionsPool.getPool().releaseConnection(studentsDao.closeConnection());
         }
         catch (SQLException |ChangeStatementException e){
             throw new ChangeStatementException();
@@ -83,14 +82,18 @@ public class WebAdminService {
         try{
             studentsDao.setConnection(ConnectionsPool.getPool().getConnection());
             applicationDao.setConnection(ConnectionsPool.getPool().getConnection());
-            applicationDao.saveApplication(new Application(applicationDto.getFacultyID(),
-                    studentsDao.getStudentID(applicationDto.getStudentEmail()) , applicationDto.getMathGrade(),
-                    applicationDto.getUkrainianGrade(), applicationDto.getEnglishGrade(),
-                    applicationDto.getHistoryGrade()));
-            applicationDao.releaseConnection();
-            studentsDao.releaseConnection();
+            Application application = new Application(
+                    applicationDto.getFacultyID(),
+                    studentsDao.getStudentID(applicationDto.getStudentEmail()),
+                    applicationDto.getMathGrade(),
+                    applicationDto.getUkrainianGrade(),
+                    applicationDto.getEnglishGrade(),
+                    applicationDto.getHistoryGrade());
+            applicationDao.saveApplication(application);
+            applicationDao.closeConnection();
+            studentsDao.closeConnection();
         } catch (SQLException throwables) {
-            throwables.printStackTrace();
+            throw new AddingStudentsException();
         }
     }
 
@@ -99,7 +102,7 @@ public class WebAdminService {
         try{
         applicationDao.setConnection(ConnectionsPool.getPool().getConnection());
         result = applicationDao.getApplicationsList();
-        applicationDao.releaseConnection();
+        applicationDao.closeConnection();
         }
         catch (SQLException throwables) {
             throwables.printStackTrace();

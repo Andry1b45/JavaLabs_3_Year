@@ -100,19 +100,18 @@ public class FacultyDao extends GeneralDao{
         }
     }
 
-    public void deleteFaculty(FacultyDto facultyDto){
+    public void deleteFaculty(FacultyDto facultyDto) throws SQLException {
         Connection connection = getConnection();
         String deleteFaculty = "delete from faculties where name = ?";
         PreparedStatement preparedStatement = null;
+        if(getFacultyByName(facultyDto.getName()) < 1 )
+            throw new SQLException();
         try {
             preparedStatement = connection.prepareStatement(deleteFaculty);
             preparedStatement.setObject(1,facultyDto.getName());
             preparedStatement.execute();
-        } catch (SQLException e){
-            e.printStackTrace();
-        }
-        catch (NullPointerException e){
-            e.printStackTrace();
+        } catch (SQLException | NullPointerException e){
+           throw  e;
         }
     }
 
@@ -127,10 +126,7 @@ public class FacultyDao extends GeneralDao{
             while (res.next()) {
                 facultyID = res.getInt("id");
             }
-        } catch (SQLException e){
-            e.printStackTrace();
-        }
-        catch (NullPointerException e){
+        } catch (SQLException | NullPointerException e){
             e.printStackTrace();
         }
         return facultyID;

@@ -2,6 +2,7 @@ package servlets.Actions;
 
 import dto.FacultyDto;
 import exception.DeleteFacultyException;
+import org.apache.log4j.Logger;
 import service.WebAdminService;
 
 import javax.servlet.ServletContext;
@@ -12,7 +13,7 @@ import java.io.IOException;
 
 public class RemoveFaculty implements Action {
     private WebAdminService webAdminService;
-
+    final static Logger logger = Logger.getLogger(RemoveFaculty.class);
     public RemoveFaculty(WebAdminService webAdminService) {
         this.webAdminService = webAdminService;
     }
@@ -23,10 +24,11 @@ public class RemoveFaculty implements Action {
 
         try{
             webAdminService.removeFaculty(new FacultyDto(name));
+            logger.info(request.getSession().getAttribute("username") + " removed faculty " + name);
             request.getRequestDispatcher("/jsp/adminMenu.jsp").forward(request, response);
         }
         catch (DeleteFacultyException e) {
-            e.printStackTrace();
+            logger.error("Error while removing faculty");
             request.getRequestDispatcher("/jsp/adminMenu.jsp").forward(request, response);
         }
     }

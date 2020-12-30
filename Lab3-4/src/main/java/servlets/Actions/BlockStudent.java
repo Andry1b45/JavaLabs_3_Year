@@ -1,6 +1,7 @@
 package servlets.Actions;
 
         import exception.ChangeStatementException;
+        import org.apache.log4j.Logger;
         import service.WebAdminService;
 
         import javax.servlet.ServletContext;
@@ -12,7 +13,7 @@ package servlets.Actions;
 
 public class BlockStudent implements Action{
     private WebAdminService webAdminService;
-
+    final static Logger logger = Logger.getLogger(BlockStudent.class);
     public BlockStudent(WebAdminService webAdminService) {
         this.webAdminService = webAdminService;
     }
@@ -23,9 +24,11 @@ public class BlockStudent implements Action{
         Boolean statement = Boolean.parseBoolean(getStatement(request));
         try{
             webAdminService.blockStudent(email, statement);
+            logger.info(email + " blocked!");
             request.getRequestDispatcher("/viewStudents").forward(request, response);
         }
         catch (ChangeStatementException e) {
+            logger.error("Error while blocking student");
             request.setAttribute("error", e.getMessage());
             request.getRequestDispatcher("/jsp/blockStudent.jsp").forward(request, response);
         }

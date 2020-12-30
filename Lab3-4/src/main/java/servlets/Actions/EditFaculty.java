@@ -2,6 +2,7 @@ package servlets.Actions;
 
 import dto.FacultyDto;
 import exception.EditFacultiesException;
+import org.apache.log4j.Logger;
 import service.WebAdminService;
 
 import javax.servlet.ServletContext;
@@ -13,6 +14,7 @@ import java.io.IOException;
 
 public class EditFaculty implements Action{
     private WebAdminService webAdminService;
+    final static Logger logger = Logger.getLogger(EditFaculty.class);
 
     public EditFaculty(WebAdminService webAdminService) {
         this.webAdminService = webAdminService;
@@ -29,7 +31,7 @@ public class EditFaculty implements Action{
             request.getRequestDispatcher("/jsp/adminMenu.jsp").forward(request, response);
         }
         catch (EditFacultiesException e) {
-            e.printStackTrace();
+            logger.error("Error while editing faculties");
             request.getRequestDispatcher("/jsp/adminMenu.jsp").forward(request, response);
         }
     }

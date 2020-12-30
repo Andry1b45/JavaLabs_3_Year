@@ -32,7 +32,7 @@ public class WebUserService {
         Optional<User> user;
         userDao.setConnection(ConnectionsPool.getPool().getConnection());
         user = userDao.findByUsername(credentials.getUsername());
-        ConnectionsPool.getPool().releaseConnection(userDao.releaseConnection());
+        ConnectionsPool.getPool().releaseConnection(userDao.closeConnection());
         if (user.isPresent()) {
             User userData = user.get();
             if (userData.getPassword().equals(credentials.getPassword())) {
@@ -48,7 +48,7 @@ public class WebUserService {
             throw new UserAlreadyExistException();
         }
         userDao.save(User.fromRegisterData(registerData));
-        ConnectionsPool.getPool().releaseConnection(userDao.releaseConnection());
+        ConnectionsPool.getPool().releaseConnection(userDao.closeConnection());
     }
 
 
@@ -57,7 +57,7 @@ public class WebUserService {
         try {
             facultyDao.setConnection(ConnectionsPool.getPool().getConnection());
             faculties = facultyDao.getFacultiesList(sort);
-            ConnectionsPool.getPool().releaseConnection(facultyDao.releaseConnection());
+            ConnectionsPool.getPool().releaseConnection(facultyDao.closeConnection());
         }
         catch (SQLException e){
             throw new GetFacultiesException();
@@ -69,7 +69,7 @@ public class WebUserService {
         try{
             applicationDao.setConnection(ConnectionsPool.getPool().getConnection());
             applicationDao.saveApplication(Application.fromApplicationData(applicationData));
-            ConnectionsPool.getPool().releaseConnection(userDao.releaseConnection());
+            ConnectionsPool.getPool().releaseConnection(userDao.closeConnection());
         }
         catch (SQLException e){
             throw new ApplicationException();
@@ -82,7 +82,7 @@ public class WebUserService {
         try{
         facultyDao.setConnection(ConnectionsPool.getPool().getConnection());
         facultyId = facultyDao.getFacultyByName(facultyName);
-        ConnectionsPool.getPool().releaseConnection(facultyDao.releaseConnection());
+        ConnectionsPool.getPool().releaseConnection(facultyDao.closeConnection());
         }
         catch (SQLException e){
             e.printStackTrace();

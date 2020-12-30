@@ -2,6 +2,7 @@ package entity;
 
 import dto.RegisterDto;
 
+import java.util.Objects;
 import java.util.UUID;
 
 public class User {
@@ -57,6 +58,16 @@ public class User {
         this.email = email;
         this.blocked = blocked;
         this.role = String.valueOf(role);
+    }
+
+    public User(UUID id, String username, String full_name, String email, boolean blocked, String
+                role){
+        this.id = id;
+        this.username = username;
+        this.full_name = full_name;
+        this.email = email;
+        this.blocked = blocked;
+        this.role = role;
     }
 
     public User(Boolean blocked){
@@ -161,5 +172,22 @@ public class User {
 
     public int getExams_id() {
         return exams_id;
+    }
+
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return blocked == user.blocked && Objects.equals(id, user.id) && Objects.equals(role, user.role) && Objects.equals(username, user.username)
+                && Objects.equals(email, user.email)
+                && Objects.equals(full_name, user.full_name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, role, username, full_name, email, blocked);
     }
 }

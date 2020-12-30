@@ -2,6 +2,7 @@ package servlets.Actions;
 
 import dto.RegisterDto;
 import exception.*;
+import org.apache.log4j.Logger;
 import service.UserService;
 import service.WebUserService;
 import utilities.Validator;
@@ -17,7 +18,7 @@ import java.sql.SQLException;
 public class RegistrationAction implements Action {
     private static controller.action.Action action;
     WebUserService webUserService;
-
+    final static Logger logger = Logger.getLogger(RegistrationAction.class);
     public RegistrationAction(WebUserService webUserService) {
         this.webUserService = webUserService;
     }
@@ -88,16 +89,19 @@ public class RegistrationAction implements Action {
             try {
                 webUserService.register(new RegisterDto(username, fullName, email, password, role, city, region,
                         school, attestat_id, exams_id));
+                logger.info("Created new user " + username);
+                response.sendRedirect(request.getContextPath() + "/index.jsp");
             } catch (SQLException e) {
-                e.printStackTrace();
+                logger.error("Error creating new user");
             }
         }
 
         try {
             webUserService.register(new RegisterDto(username, fullName, email, password, role));
+            logger.info("Created new user " + username);
             response.sendRedirect(request.getContextPath() + "/index.jsp");
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error("Error creating new user");
         }
     }
 }

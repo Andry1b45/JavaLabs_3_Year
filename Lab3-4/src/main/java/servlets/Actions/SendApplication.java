@@ -36,9 +36,11 @@ public class SendApplication implements Action {
             service.sendApplication(new ApplicationDto(String.valueOf(faculty),
                     UUID.fromString(session.getAttribute("id").toString()), math, ukrainian, english, history));
             request.getRequestDispatcher("/jsp/studentMenu.jsp").forward(request, response);
+            logger.info(request.getSession().getAttribute("username") +
+                    " sent application to " + request.getParameter("faculty"));
         }
         catch (ApplicationException exception) {
-            logger.error("Application send error: ", exception);
+            logger.error("There were error occured while application sending");
             request.setAttribute("error", exception.getMessage());
             request.getRequestDispatcher("/jsp/sendApplication.jsp").forward(request, response);
         }

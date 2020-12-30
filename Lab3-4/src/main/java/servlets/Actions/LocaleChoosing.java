@@ -26,7 +26,6 @@ public class LocaleChoosing implements Action {
         String language = request.getParameter("language");
         HttpSession session = request.getSession();
         session.setAttribute("language", language);
-
         request.getRequestDispatcher("/index.jsp").forward(request, response);
     }
 }

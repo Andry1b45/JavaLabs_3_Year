@@ -6,7 +6,6 @@ import exception.BadCredentialsException;
 import exception.BlockedUserException;
 import exception.UnavailableException;
 import org.apache.log4j.Logger;
-import org.apache.log4j.PropertyConfigurator;
 import service.WebUserService;
 
 import javax.servlet.ServletContext;
@@ -35,13 +34,12 @@ public class LoginAction implements Action {
             LoginDto loginDto = new LoginDto(username, password);
             user = service.login(loginDto);
             if(user.getBlocked().equals(true)){
-                logger.error("Blocked user: ", new BlockedUserException());
+                logger.error("User had been blocked");
                 throw new BlockedUserException();
             }
         }
         catch (BadCredentialsException | UnavailableException | BlockedUserException| SQLException exc){
-            logger.error("Login error: ", exc);
-            logger.debug("Login error: ", exc);
+            logger.error(exc.getMessage());
             request.setAttribute("error", exc.getMessage());
             request.getRequestDispatcher("/index.jsp").forward(request, response);
         }
@@ -50,6 +48,9 @@ public class LoginAction implements Action {
         session.setAttribute("id",user.getId());
         session.setAttribute("role", user.getRole());
         session.setMaxInactiveInterval(7200);
+
+        logger.info("User " + session.getAttribute("username") + " successfully logged in as " +
+                session.getAttribute("role"));
 
         if(user.getRole().equals("STUDENT")){
             request.getRequestDispatcher("/jsp/studentMenu.jsp").forward(request, response);

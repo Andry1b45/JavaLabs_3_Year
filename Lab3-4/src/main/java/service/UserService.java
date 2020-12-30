@@ -26,7 +26,7 @@ public class UserService {
     public String login(LoginDto credentials) throws BadCredentialsException, SQLException {
         userDao.setConnection(ConnectionsPool.getPool().getConnection());
         Optional<User> user = userDao.findByUsername(credentials.getUsername());
-        ConnectionsPool.getPool().releaseConnection(userDao.releaseConnection());
+        ConnectionsPool.getPool().releaseConnection(userDao.closeConnection());
         if (user.isPresent()) {
             User userData = user.get();
             if (userData.getPassword().equals(credentials.getPassword())) {
@@ -43,7 +43,7 @@ public class UserService {
             throw new UserAlreadyExistException();
         }
         userDao.save(User.fromRegisterData(registerData));
-        ConnectionsPool.getPool().releaseConnection(userDao.releaseConnection());
+        ConnectionsPool.getPool().releaseConnection(userDao.closeConnection());
         return "Register success!";
     }
 
@@ -52,7 +52,7 @@ public class UserService {
         try {
             facultyDao.setConnection(ConnectionsPool.getPool().getConnection());
             faculties = facultyDao.getFaculties(sort);
-            ConnectionsPool.getPool().releaseConnection(facultyDao.releaseConnection());
+            ConnectionsPool.getPool().releaseConnection(facultyDao.closeConnection());
         }
         catch (SQLException e){
             throw new GetFacultiesException();
@@ -64,7 +64,7 @@ public class UserService {
         try{
         applicationDao.setConnection(ConnectionsPool.getPool().getConnection());
         applicationDao.saveApplication(Application.fromApplicationData(applicationData)); //todo сделать нормальные названия
-        ConnectionsPool.getPool().releaseConnection(userDao.releaseConnection());
+        ConnectionsPool.getPool().releaseConnection(userDao.closeConnection());
         }
         catch (SQLException e){
             throw new ApplicationException();

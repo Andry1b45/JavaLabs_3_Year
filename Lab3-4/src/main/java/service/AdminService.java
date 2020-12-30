@@ -34,7 +34,7 @@ public class AdminService {
         try{
         studentsDao.setConnection(ConnectionsPool.getPool().getConnection());
         students = studentsDao.getStudents();
-        ConnectionsPool.getPool().releaseConnection(studentsDao.releaseConnection());}
+        ConnectionsPool.getPool().releaseConnection(studentsDao.closeConnection());}
         catch (NullPointerException | SQLException e){
             throw new GetStudentsException();
         }
@@ -46,7 +46,7 @@ public class AdminService {
         try{
         studentsDao.setConnection(ConnectionsPool.getPool().getConnection());
         studentsDao.changeStudentStatement(id, statement);
-        ConnectionsPool.getPool().releaseConnection(studentsDao.releaseConnection());
+        ConnectionsPool.getPool().releaseConnection(studentsDao.closeConnection());
         }
         catch (SQLException e){
             throw new ChangeStatementException();
@@ -59,7 +59,7 @@ public class AdminService {
         try{
         facultyDao.setConnection(ConnectionsPool.getPool().getConnection());
         facultyDao.addFaculty(facultyDto);
-        ConnectionsPool.getPool().releaseConnection(facultyDao.releaseConnection());
+        ConnectionsPool.getPool().releaseConnection(facultyDao.closeConnection());
         }
         catch (SQLException e){
             throw new EditFacultiesException();
@@ -84,7 +84,7 @@ public class AdminService {
         try {
             applicationDao.setConnection(ConnectionsPool.getPool().getConnection());
              applicationsArray = applicationDao.getApplications();
-            ConnectionsPool.getPool().releaseConnection(applicationDao.releaseConnection());
+            ConnectionsPool.getPool().releaseConnection(applicationDao.closeConnection());
         }
         catch (SQLException e){
             throw new GetApplicationsException();
@@ -97,7 +97,7 @@ public class AdminService {
         try{
             applicationDao.setConnection(ConnectionsPool.getPool().getConnection());
             applicationsArray = applicationDao.getApplicationList(facultyDto);
-            ConnectionsPool.getPool().releaseConnection(applicationDao.releaseConnection());
+            ConnectionsPool.getPool().releaseConnection(applicationDao.closeConnection());
         }
         catch (SQLException e){
             throw new GetApplicationsException();
@@ -109,7 +109,7 @@ public class AdminService {
         try {
             facultyDao.setConnection(ConnectionsPool.getPool().getConnection());
             facultyDao.deleteFaculty(facultyDto);
-            ConnectionsPool.getPool().releaseConnection(facultyDao.releaseConnection());
+            ConnectionsPool.getPool().releaseConnection(facultyDao.closeConnection());
         }
         catch (SQLException e){
             throw new DeleteFacultyException();
@@ -124,7 +124,7 @@ public class AdminService {
         try{
         appliedStudentsDao.setConnection(ConnectionsPool.getPool().getConnection());
         result = appliedStudentsDao.addNewStudent(appliedStudentDto);
-        ConnectionsPool.getPool().releaseConnection(appliedStudentsDao.releaseConnection());
+        ConnectionsPool.getPool().releaseConnection(appliedStudentsDao.closeConnection());
         }
         catch (SQLException e){
             throw new AddingStudentsException();
@@ -136,11 +136,11 @@ public class AdminService {
         try{
         applicationDao.setConnection(ConnectionsPool.getPool().getConnection());
         applicationDao.removeAllStudentApplications(appliedStudentDto);
-        ConnectionsPool.getPool().releaseConnection(applicationDao.releaseConnection());
+        ConnectionsPool.getPool().releaseConnection(applicationDao.closeConnection());
 
         facultyDao.setConnection(ConnectionsPool.getPool().getConnection());
         facultyDao.decrementPlace(appliedStudentDto);
-        ConnectionsPool.getPool().releaseConnection(facultyDao.releaseConnection());}
+        ConnectionsPool.getPool().releaseConnection(facultyDao.closeConnection());}
         catch (SQLException e){
             throw new RemoveApplicationsException();
         }
